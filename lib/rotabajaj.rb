@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "rotabajaj/version"
+require_relative 'rotabajaj/version'
 
 module Rotabajaj
   class Error < StandardError; end
