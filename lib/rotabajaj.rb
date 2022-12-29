@@ -66,7 +66,7 @@ module Rotabajaj
     end
 
     def customer_email
-      parsed_email['email']&.split&.first || ''
+      parsed_email['email'] || ''
     end
 
     def customer_cpf
