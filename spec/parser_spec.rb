@@ -50,4 +50,74 @@ RSpec.describe F1SalesCustom::Email::Parser do
       expect(parsed_email[:description]).to eq("Data de Nascimento: 1971-06-27 - CNH: #{customer_cnh} - RG: #{customer_rg} - Consultor: Caio")
     end
   end
+
+  context 'when came from the website formulário de Test Ride' do
+    let(:email) do
+      email = OpenStruct.new
+      email.to = [email: 'website@rotabajaj.f1sales.net']
+      email.subject = 'Site Rota B - Agendamento Programado'
+      email.body = "De: Vinny\nTelefone: 1143211234\nMoto: Dominar 400"
+
+      email
+    end
+
+    let(:parsed_email) { described_class.new(email).parse }
+
+    it 'contains lead website a source name' do
+      expect(parsed_email[:source][:name]).to eq('Website')
+    end
+
+    it 'contains name' do
+      expect(parsed_email[:customer][:name]).to eq('Vinny') # customer_name
+    end
+
+    it 'contains phone' do
+      expect(parsed_email[:customer][:phone]).to eq('1143211234') # customer_phone
+    end
+
+    it 'contains product name' do
+      expect(parsed_email[:product][:name]).to eq('Dominar 400')
+    end
+  end
+
+  context 'when came from the website formulário de Test Ride' do
+    let(:email) do
+      email = OpenStruct.new
+      email.to = [email: 'website@rotabajaj.f1sales.net']
+      email.subject = "Site Rota B - #{customer_name} - Formulário"
+      email.body = "Nome: cynthia galdo\nE-mail: cynthiagaldo@gmail.com\nFone: 43996611478\nInteresse: Consórcio\nUnidade: Campinas\nResposta: WhatsApp\nMensagem: teste f1\nPagina: https://rotabajaj.com.br/novos/dominar-160/"
+
+      email
+    end
+
+    let(:parsed_email) { described_class.new(email).parse }
+
+    it 'contains lead website a source name' do
+      expect(parsed_email[:source][:name]).to eq('Website')
+    end
+
+    it 'contains name' do
+      expect(parsed_email[:customer][:name]).to eq('cynthia galdo') # customer_name
+    end
+
+    it 'contains phone' do
+      expect(parsed_email[:customer][:phone]).to eq('43996611478') # customer_phone
+    end
+
+    it 'contains email' do
+      expect(parsed_email[:customer][:email]).to eq('cynthiagaldo@gmail.com') # customer_email
+    end
+
+    it 'contains product name' do
+      expect(parsed_email[:product][:link]).to eq('https://rotabajaj.com.br/novos/dominar-160/')
+    end
+
+    it 'contains message' do
+      expect(parsed_email[:message]).to eq('teste f1')
+    end
+
+    it 'contains description' do
+      expect(parsed_email[:description]).to eq("Interesse: Consórcio - Unidade: Campinas - Resposta: WhatsApp")
+    end
+  end
 end
