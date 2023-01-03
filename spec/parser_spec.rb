@@ -56,7 +56,7 @@ RSpec.describe F1SalesCustom::Email::Parser do
       email = OpenStruct.new
       email.to = [email: 'website@rotabajaj.f1sales.net']
       email.subject = 'Site Rota B - Agendamento Programado'
-      email.body = "De: Vinny\nTelefone: 1143211234\nMoto: Dominar 400"
+      email.body = "De: #{customer_name}\nTelefone: #{customer_phone}\nMoto: Dominar 400"
 
       email
     end
@@ -68,11 +68,11 @@ RSpec.describe F1SalesCustom::Email::Parser do
     end
 
     it 'contains name' do
-      expect(parsed_email[:customer][:name]).to eq('Vinny') # customer_name
+      expect(parsed_email[:customer][:name]).to eq(customer_name)
     end
 
     it 'contains phone' do
-      expect(parsed_email[:customer][:phone]).to eq('1143211234') # customer_phone
+      expect(parsed_email[:customer][:phone]).to eq(customer_phone)
     end
 
     it 'contains product name' do
@@ -85,7 +85,7 @@ RSpec.describe F1SalesCustom::Email::Parser do
       email = OpenStruct.new
       email.to = [email: 'website@rotabajaj.f1sales.net']
       email.subject = "Site Rota B - #{customer_name} - Formulário"
-      email.body = "Nome: cynthia galdo\nE-mail: cynthiagaldo@gmail.com\nFone: 43996611478\nInteresse: Consórcio\nUnidade: Campinas\nResposta: WhatsApp\nMensagem: teste f1\nPagina: https://rotabajaj.com.br/novos/dominar-160/"
+      email.body = "Nome: #{customer_name}\nE-mail: #{customer_email}\nFone: #{customer_phone}\nInteresse: Consórcio\nUnidade: Campinas\nResposta: WhatsApp\nMensagem: teste f1\nPagina: https://rotabajaj.com.br/novos/dominar-160/"
 
       email
     end
@@ -97,15 +97,15 @@ RSpec.describe F1SalesCustom::Email::Parser do
     end
 
     it 'contains name' do
-      expect(parsed_email[:customer][:name]).to eq('cynthia galdo') # customer_name
+      expect(parsed_email[:customer][:name]).to eq(customer_name)
     end
 
     it 'contains phone' do
-      expect(parsed_email[:customer][:phone]).to eq('43996611478') # customer_phone
+      expect(parsed_email[:customer][:phone]).to eq(customer_phone)
     end
 
     it 'contains email' do
-      expect(parsed_email[:customer][:email]).to eq('cynthiagaldo@gmail.com') # customer_email
+      expect(parsed_email[:customer][:email]).to eq(customer_email)
     end
 
     it 'contains product name' do
@@ -117,7 +117,7 @@ RSpec.describe F1SalesCustom::Email::Parser do
     end
 
     it 'contains description' do
-      expect(parsed_email[:description]).to eq("Interesse: Consórcio - Unidade: Campinas - Resposta: WhatsApp")
+      expect(parsed_email[:description]).to eq('Interesse: Consórcio - Unidade: Campinas - Resposta: WhatsApp')
     end
   end
 end
