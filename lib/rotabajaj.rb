@@ -25,6 +25,7 @@ module Rotabajaj
         source: source,
         customer: customer,
         product: product,
+        message: message,
         description: lead_description
       }
     end
@@ -35,7 +36,7 @@ module Rotabajaj
 
     def regular_expression
       'Nome|Fone|Telefone|E-mail|Pagina|Interesse|Unidade|Resposta|Mensagem|CPF|CNH|RG|Data Nascimento|
-      Horario|Modelo|Consultor|Concorod com termos|Data'
+      Horario|Modelo|Consultor|Concorod com termos|Data|Moto|De'
     end
 
     def source
@@ -58,7 +59,7 @@ module Rotabajaj
     end
 
     def customer_name
-      parsed_email['nome']
+      parsed_email['nome'] || parsed_email['de']
     end
 
     def customer_phone
@@ -75,12 +76,25 @@ module Rotabajaj
 
     def product
       {
-        name: parsed_email['modelo']
+        name: parsed_email['modelo'] || parsed_email['moto'],
+        link: parsed_email['pagina']
       }
     end
 
+    def message
+      parsed_email['mensagem']
+    end
+
     def lead_description
-      "Data de Nascimento: #{birth_date} - CNH: #{customer_cnh} - RG: #{customer_rg} - Consultor: #{consultant}"
+      if email_subject['test ride']
+        "Data de Nascimento: #{birth_date} - CNH: #{customer_cnh} - RG: #{customer_rg} - Consultor: #{consultant}"
+      else
+        "Interesse: #{interest} - Unidade: #{unit} - Resposta: #{answer}"
+      end
+    end
+
+    def email_subject
+      @email.subject.downcase
     end
 
     def birth_date
@@ -97,6 +111,18 @@ module Rotabajaj
 
     def consultant
       parsed_email['consultor']
+    end
+
+    def interest
+      parsed_email['interesse']
+    end
+
+    def unit
+      parsed_email['unidade']
+    end
+
+    def answer
+      parsed_email['resposta']
     end
   end
 end
